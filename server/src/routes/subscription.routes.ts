@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { authenticate } from '../middleware/authenticate';
 import { validateRequest } from '../middleware/validateRequest';
-import { updateSubscriptionSchema } from '../validators/subscription.schema';
+import { updateSubscriptionSchema } from '../validators';
 import * as subService from '../services/subscription.service';
 
 const router = Router();

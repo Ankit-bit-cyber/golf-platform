@@ -1,11 +1,11 @@
 import { z } from 'zod';
 
 export const createScoreSchema = z.object({
-  value: z.number().int().min(1).max(45),
-  date: z.string().datetime(), // ISO Date string
+  value: z.any(),
+  date: z.string(),
 });
 
 export const updateScoreSchema = z.object({
-  value: z.number().int().min(1).max(45).optional(),
-  date: z.string().datetime().optional(),
+  value: z.any().optional(),
+  date: z.string().optional(),
 });

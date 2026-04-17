@@ -1,8 +1,7 @@
-import { PrismaClient, WinnerStatus } from '@prisma/client';
+import { WinnerStatus } from '@prisma/client';
+import prisma from '../lib/prisma';
 import { uploadProof } from './storage.service';
 import { sendPayoutInstructions } from './email.service';
-
-const prisma = new PrismaClient();
 
 export const getMyWins = async (userId: string) => {
     return await prisma.winner.findMany({

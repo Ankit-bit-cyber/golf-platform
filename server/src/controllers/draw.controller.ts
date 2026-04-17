@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import * as drawService from '../services/draw.service';
-import { PrismaClient } from '@prisma/client';
+import prisma from '../lib/prisma';
 
 export const createDraw = async (req: Request, res: Response) => {
   try {

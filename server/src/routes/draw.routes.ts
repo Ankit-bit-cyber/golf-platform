@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { authenticate } from '../middleware/authenticate';
 import { requireAdmin } from '../middleware/requireAdmin';
 import { validateRequest } from '../middleware/validateRequest';
-import { createDrawSchema } from '../validators/draw.schema';
+import { createDrawSchema } from '../validators';
 import * as drawController from '../controllers/draw.controller';
 
 const router = Router();

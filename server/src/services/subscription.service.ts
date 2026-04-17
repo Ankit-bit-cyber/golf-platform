@@ -1,8 +1,4 @@
-import { PrismaClient, SubscriptionPlan } from '@prisma/client';
-import { addMonths, addYears } from 'date-fns';
-import { sendSubscriptionConfirmation } from './email.service';
-
-const prisma = new PrismaClient();
+import prisma from '../lib/prisma';
 
 export const getSubscription = async (user_id: string) => {
   return await prisma.subscription.findUnique({

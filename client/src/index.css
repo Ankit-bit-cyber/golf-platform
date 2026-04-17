@@ -14,7 +14,7 @@
   --color-primary-950: #172554;
 
   --font-sans: "Inter", "Outfit", system-ui, sans-serif;
-  
+
   --radius-xl: 1rem;
   --radius-2xl: 1.5rem;
   --radius-3xl: 2rem;
@@ -31,7 +31,7 @@
   .glass {
     @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-xl;
   }
-  
+
   .glass-dark {
     @apply bg-slate-900/80 backdrop-blur-md border border-slate-800/50 shadow-2xl;
   }
@@ -55,14 +55,26 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-slate-300 rounded-full hover:bg-slate-400 transition-colors;
+  @apply bg-slate-300 rounded-full transition-colors;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-slate-400;
 }
 
 /* Animations */
 @keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0px); }
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
 }
 
 .animate-float {

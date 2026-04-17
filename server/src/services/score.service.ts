@@ -1,7 +1,4 @@
-import { PrismaClient } from '@prisma/client';
-import { isSameDay, parseISO } from 'date-fns';
-
-const prisma = new PrismaClient();
+import prisma from '../lib/prisma';
 
 export const getScores = async (user_id: string) => {
   return await prisma.score.findMany({

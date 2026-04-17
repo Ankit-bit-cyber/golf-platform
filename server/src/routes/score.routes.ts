@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { validateRequest } from '../middleware/validateRequest';
-import { createScoreSchema, updateScoreSchema } from '../validators/score.schema';
+import { createScoreSchema, updateScoreSchema } from '../validators';
 import * as scoreController from '../controllers/score.controller';
 import { authenticate } from '../middleware/authenticate';
 import { requireSubscription } from '../middleware/requireSubscription';

@@ -2,8 +2,8 @@ import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { env } from '../config/env';
-
-const prisma = new PrismaClient();
+import { sendWelcome } from './email.service';
+import prisma from '../lib/prisma';
 
 export const registerUser = async (data: any) => {
   const existingUser = await prisma.user.findUnique({ where: { email: data.email } });
@@ -28,11 +28,11 @@ export const registerUser = async (data: any) => {
           is_dummy: true,
         }
       }
-    },
-    include: {
-      subscription: true,
     }
   });
+
+  // Trigger Welcome Email Naturally
+  sendWelcome(user.email, user.name).catch(console.error);
 
   const { password_hash, ...userWithoutPassword } = user;
   

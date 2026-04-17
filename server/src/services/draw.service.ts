@@ -1,8 +1,4 @@
-import { PrismaClient, DrawType, MatchType } from '@prisma/client';
-import { calcPools } from './prize.service';
-import { sendDrawResult } from './email.service';
-
-const prisma = new PrismaClient();
+import prisma from '../lib/prisma';
 
 function generateRandomNumbers(): number[] {
   const nums = new Set<number>();
