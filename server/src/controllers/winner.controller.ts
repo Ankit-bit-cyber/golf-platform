@@ -3,14 +3,14 @@ import * as winnerService from '../services/winner.service';
 
 export const getMyWinnings = async (req: Request, res: Response) => {
   try {
-    const winnings = await winnerService.getUserWinnings(req.user!.id);
+    const winnings = await winnerService.getMyWins(req.user!.id);
     res.json(winnings);
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
 };
 
-export const getWinner = async (req: Request, res: Response) => {
+export const getWinner = async (req: Request<{ id: string }>, res: Response) => {
   try {
     const winner = await winnerService.getWinnerById(req.params.id);
     if (winner.user_id !== req.user!.id && req.user!.role !== 'ADMIN') {
@@ -22,7 +22,7 @@ export const getWinner = async (req: Request, res: Response) => {
   }
 };
 
-export const submitProof = async (req: Request, res: Response) => {
+export const submitProof = async (req: Request<{ id: string }>, res: Response) => {
   try {
     if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
     const result = await winnerService.submitProof(req.params.id, req.user!.id, req.file);
@@ -32,18 +32,18 @@ export const submitProof = async (req: Request, res: Response) => {
   }
 };
 
-export const approveWinner = async (req: Request, res: Response) => {
+export const approveWinner = async (req: Request<{ id: string }>, res: Response) => {
   try {
-    const result = await winnerService.updateWinnerStatus(req.params.id, 'APPROVED');
+    const result = await winnerService.verifyWinner(req.params.id, 'approve');
     res.json(result);
   } catch (error: any) {
     res.status(400).json({ error: error.message });
   }
 };
 
-export const rejectWinner = async (req: Request, res: Response) => {
+export const rejectWinner = async (req: Request<{ id: string }>, res: Response) => {
   try {
-    const result = await winnerService.updateWinnerStatus(req.params.id, 'REJECTED');
+    const result = await winnerService.verifyWinner(req.params.id, 'reject');
     res.json(result);
   } catch (error: any) {
     res.status(400).json({ error: error.message });

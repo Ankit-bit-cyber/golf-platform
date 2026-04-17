@@ -11,7 +11,7 @@ export const createDraw = async (req: Request, res: Response) => {
   }
 };
 
-export const simulateDraw = async (req: Request, res: Response) => {
+export const simulateDraw = async (req: Request<{ id: string }>, res: Response) => {
   try {
     const draw = await drawService.simulateDraw(req.params.id);
     res.json(draw);
@@ -20,7 +20,7 @@ export const simulateDraw = async (req: Request, res: Response) => {
   }
 };
 
-export const publishDraw = async (req: Request, res: Response) => {
+export const publishDraw = async (req: Request<{ id: string }>, res: Response) => {
   try {
     const draw = await drawService.publishDraw(req.params.id);
     res.json(draw);
@@ -38,7 +38,7 @@ export const getDraws = async (req: Request, res: Response) => {
   }
 };
 
-export const getDraw = async (req: Request, res: Response) => {
+export const getDraw = async (req: Request<{ id: string }>, res: Response) => {
   try {
     const draw = await drawService.getDrawDetails(req.params.id);
     if (!draw) return res.status(404).json({ error: 'Not found' });

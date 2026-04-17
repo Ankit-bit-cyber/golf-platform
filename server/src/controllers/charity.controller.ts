@@ -12,7 +12,7 @@ export const getCharities = async (req: Request, res: Response) => {
   }
 };
 
-export const getCharity = async (req: Request, res: Response) => {
+export const getCharity = async (req: Request<{ id: string }>, res: Response) => {
   try {
     const charity = await charityService.getCharityById(req.params.id);
     res.json(charity);
@@ -30,7 +30,7 @@ export const createCharity = async (req: Request, res: Response) => {
   }
 };
 
-export const updateCharity = async (req: Request, res: Response) => {
+export const updateCharity = async (req: Request<{ id: string }>, res: Response) => {
   try {
     const charity = await charityService.updateCharity(req.params.id, req.body);
     res.json(charity);
@@ -39,7 +39,7 @@ export const updateCharity = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteCharity = async (req: Request, res: Response) => {
+export const deleteCharity = async (req: Request<{ id: string }>, res: Response) => {
   try {
     const result = await charityService.deleteCharity(req.params.id);
     res.json(result);

@@ -39,6 +39,12 @@ export const submitProof = async (winnerId: string, userId: string, file: Expres
     });
 }
 
+export const getWinnerById = async (id: string) => {
+    const winner = await prisma.winner.findUnique({ where: { id }, include: { draw: true } });
+    if (!winner) throw new Error('Winner record not found');
+    return winner;
+};
+
 export const getAllWinners = async () => {
     return await prisma.winner.findMany({
         include: { user: { select: { name: true, email: true } }, draw: true },

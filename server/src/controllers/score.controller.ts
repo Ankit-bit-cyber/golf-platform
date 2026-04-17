@@ -19,7 +19,7 @@ export const addScore = async (req: Request, res: Response) => {
   }
 };
 
-export const updateScore = async (req: Request, res: Response) => {
+export const updateScore = async (req: Request<{ id: string }>, res: Response) => {
   try {
     const score = await scoreService.updateScore(req.params.id, req.user!.id, req.body);
     res.json(score);
@@ -28,7 +28,7 @@ export const updateScore = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteScore = async (req: Request, res: Response) => {
+export const deleteScore = async (req: Request<{ id: string }>, res: Response) => {
   try {
     const result = await scoreService.deleteScore(req.params.id, req.user!.id);
     res.json(result);

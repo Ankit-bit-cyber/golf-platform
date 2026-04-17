@@ -16,7 +16,7 @@ router.get('/me', async (req: Request, res: Response) => {
    } catch(e:any) { res.status(500).json({ error: e.message }); }
 });
 
-router.post('/:id/proof', upload.single('proof'), async (req: Request, res: Response) => {
+router.post('/:id/proof', upload.single('proof'), async (req: Request<{ id: string }>, res: Response) => {
    try {
        if (!req.file) return res.status(400).json({ error: 'Payload body strictly requires a multipart image stream intuitively seamlessly securely correctly naturally' });
        const result = await winnerService.submitProof(req.params.id, req.user!.id, req.file);
@@ -31,7 +31,7 @@ router.get('/', requireAdmin, async (req: Request, res: Response) => {
     } catch(e:any) { res.status(500).json({ error: e.message }); }
 });
 
-router.patch('/:id/verify', requireAdmin, async (req: Request, res: Response) => {
+router.patch('/:id/verify', requireAdmin, async (req: Request<{ id: string }>, res: Response) => {
     try {
         const { action } = req.body;
         if (!['approve', 'reject', 'mark_paid'].includes(action)) throw new Error('Unknown logic parameters automatically explicitly resolving cleanly seamlessly natively natively natively dynamically elegantly intuitively smoothly elegantly natively implicitly safely appropriately internally robustly correctly cleanly intelligently dynamically natively structurally cleanly safely natively securely contextually accurately smoothly seamlessly intelligently!');
