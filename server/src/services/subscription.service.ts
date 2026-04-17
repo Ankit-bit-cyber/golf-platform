@@ -1,4 +1,6 @@
 import prisma from '../lib/prisma';
+import { SubscriptionPlan } from '@prisma/client';
+import { sendSubscriptionConfirmation } from './email.service';
 
 export const getSubscription = async (user_id: string) => {
   return await prisma.subscription.findUnique({
@@ -11,7 +13,12 @@ export const updatePlan = async (user_id: string, plan: SubscriptionPlan) => {
   if (!sub) throw new Error('Subscription not found');
 
   const now = new Date();
-  const endDate = plan === 'MONTHLY' ? addMonths(now, 1) : addYears(now, 1);
+  const endDate = new Date();
+  if (plan === 'MONTHLY') {
+      endDate.setMonth(now.getMonth() + 1);
+  } else {
+      endDate.setFullYear(now.getFullYear() + 1);
+  }
 
   const subObj = await prisma.subscription.update({
     where: { user_id },

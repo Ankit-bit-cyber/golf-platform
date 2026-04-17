@@ -8,13 +8,19 @@ export const getScores = async (user_id: string) => {
 };
 
 export const addScore = async (user_id: string, value: number, dateStr: string) => {
-  const newDate = parseISO(dateStr);
+  const newDate = new Date(dateStr);
   const existing = await prisma.score.findMany({
     where: { user_id },
     orderBy: { date: 'asc' }
   });
 
-  const duplicate = existing.find(s => isSameDay(new Date(s.date), newDate));
+  const duplicate = existing.find(s => {
+      const d1 = new Date(s.date);
+      return d1.getFullYear() === newDate.getFullYear() && 
+             d1.getMonth() === newDate.getMonth() && 
+             d1.getDate() === newDate.getDate();
+  });
+  
   if (duplicate) throw new Error('A score for this date already exists');
 
   return prisma.$transaction(async (tx) => {
@@ -32,11 +38,16 @@ export const updateScore = async (id: string, user_id: string, data: { value?: n
   }
 
   if (data.date) {
-    const newDate = parseISO(data.date);
+    const newDate = new Date(data.date);
     const existing = await prisma.score.findMany({
       where: { user_id, id: { not: id } },
     });
-    const duplicate = existing.find(s => isSameDay(new Date(s.date), newDate));
+    const duplicate = existing.find(s => {
+        const d1 = new Date(s.date);
+        return d1.getFullYear() === newDate.getFullYear() && 
+               d1.getMonth() === newDate.getMonth() && 
+               d1.getDate() === newDate.getDate();
+    });
     if (duplicate) throw new Error('A score for this date already exists');
   }
 
@@ -44,7 +55,7 @@ export const updateScore = async (id: string, user_id: string, data: { value?: n
     where: { id },
     data: {
       value: data.value ?? score.value,
-      date: data.date ? parseISO(data.date) : score.date
+      date: data.date ? new Date(data.date) : score.date
     }
   });
 };

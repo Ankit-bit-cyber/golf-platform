@@ -51,7 +51,6 @@ export const getDraw = async (req: Request, res: Response) => {
 export const getMyResults = async (req: Request, res: Response) => {
     try {
         const entries = await drawService.getUserDrawEntries(req.user!.id);
-        const prisma = new PrismaClient();
         const winnings = await prisma.winner.findMany({ where: { user_id: req.user!.id } });
         
         const results = entries.map(entry => {

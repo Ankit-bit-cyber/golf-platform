@@ -1,22 +1,14 @@
 import express from 'express';
 import { env } from './config/env';
-import authRoutes from './routes/auth.routes';
-import scoreRoutes from './routes/score.routes';
+
+// STEP 1: TEST THESE ONE BY ONE
+// import { authenticate } from './middleware/authenticate';
+// import { requireSubscription } from './middleware/requireSubscription';
+// import { validateRequest } from './middleware/validateRequest';
+// import { createScoreSchema } from './validators';
+// import * as scoreController from './controllers/score.controller';
 
 const app = express();
-app.use(express.json());
+app.get('/api/health', (req, res) => res.json({ ok: true, step: 'isolation-base' }));
 
-app.use('/api/auth', authRoutes);
-app.use('/api/scores', scoreRoutes);
-
-app.get('/api/health', (req, res) => {
-  res.json({ ok: true, isolation: 'nuclear' });
-});
-
-app.get('/api/test-direct', (req, res) => {
-  res.json({ message: 'Direct route works' });
-});
-
-app.listen(env.PORT, () => {
-  console.log(`NUCLEAR TEST running on port ${env.PORT}`);
-});
+app.listen(env.PORT, () => console.log('Base running'));
