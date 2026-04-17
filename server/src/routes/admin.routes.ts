@@ -24,7 +24,7 @@ router.get('/users', async (req: Request, res: Response) => {
     } catch(err:any) { res.status(500).json({error: err.message}); }
 });
 
-router.patch('/users/:id/subscription/toggle', async (req: Request, res: Response) => {
+router.patch('/users/:id/subscription/toggle', async (req: Request<{ id: string }>, res: Response) => {
     try {
         const result = await adminService.toggleUserSubscription(req.params.id);
         res.json(result);
