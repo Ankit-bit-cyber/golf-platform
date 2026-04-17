@@ -1,0 +1,154 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum SubscriptionPlan {
+  MONTHLY
+  YEARLY
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELLED
+  LAPSED
+}
+
+enum DrawStatus {
+  DRAFT
+  SIMULATED
+  PUBLISHED
+}
+
+enum DrawType {
+  RANDOM
+  ALGORITHM
+}
+
+enum MatchType {
+  THREE
+  FOUR
+  FIVE
+}
+
+enum WinnerStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  PAID
+}
+
+model User {
+  id             String        @id @default(uuid()) @db.Uuid
+  email          String        @unique
+  password_hash  String
+  name           String
+  role           Role          @default(USER)
+  charity_id     String?       @db.Uuid
+  charity_pct    Int           @default(10)
+  created_at     DateTime      @default(now())
+
+  // Relations
+  charity        Charity?      @relation(fields: [charity_id], references: [id])
+  subscription   Subscription?
+  scores         Score[]
+  drawEntries    DrawEntry[]
+  winnings       Winner[]
+}
+
+model Subscription {
+  id             String             @id @default(uuid()) @db.Uuid
+  user_id        String             @unique @db.Uuid
+  plan           SubscriptionPlan
+  status         SubscriptionStatus
+  start_date     DateTime
+  end_date       DateTime
+  is_dummy       Boolean            @default(true)
+
+  user           User               @relation(fields: [user_id], references: [id])
+}
+
+model Score {
+  id             String   @id @default(uuid()) @db.Uuid
+  user_id        String   @db.Uuid
+  value          Int      // (1-45) Use application code to validate range
+  date           DateTime
+  created_at     DateTime @default(now())
+
+  user           User     @relation(fields: [user_id], references: [id])
+
+  @@unique([user_id, date])
+}
+
+model Draw {
+  id             String     @id @default(uuid()) @db.Uuid
+  month          Int
+  year           Int
+  status         DrawStatus @default(DRAFT)
+  draw_type      DrawType
+  winning_nums   Json       // (Int[5])
+  jackpot_carry  Boolean    @default(false)
+  pool_total     Decimal    @db.Decimal(10, 2)
+  created_at     DateTime   @default(now())
+
+  entries        DrawEntry[]
+  winners        Winner[]
+  prizePool      PrizePool?
+}
+
+model DrawEntry {
+  id             String   @id @default(uuid()) @db.Uuid
+  draw_id        String   @db.Uuid
+  user_id        String   @db.Uuid
+  scores_snap    Json     // (score values at draw time — immutable)
+  
+  draw           Draw     @relation(fields: [draw_id], references: [id])
+  user           User     @relation(fields: [user_id], references: [id])
+
+  @@unique([draw_id, user_id])
+}
+
+model Winner {
+  id             String       @id @default(uuid()) @db.Uuid
+  draw_id        String       @db.Uuid
+  user_id        String       @db.Uuid
+  match_type     MatchType
+  prize_amount   Decimal      @db.Decimal(10, 2)
+  proof_url      String?
+  status         WinnerStatus @default(PENDING)
+
+  draw           Draw         @relation(fields: [draw_id], references: [id])
+  user           User         @relation(fields: [user_id], references: [id])
+}
+
+model Charity {
+  id             String    @id @default(uuid()) @db.Uuid
+  name           String
+  description    String
+  image_url      String?
+  website        String?
+  is_featured    Boolean   @default(false)
+  events         Json      @default("[]") // array of { title, date }
+  created_at     DateTime  @default(now())
+
+  users          User[]
+}
+
+model PrizePool {
+  id             String   @id @default(uuid()) @db.Uuid
+  draw_id        String   @unique @db.Uuid
+  jackpot_amt    Decimal  @db.Decimal(10, 2)
+  tier2_amt      Decimal  @db.Decimal(10, 2)
+  tier3_amt      Decimal  @db.Decimal(10, 2)
+
+  draw           Draw     @relation(fields: [draw_id], references: [id])
+}
